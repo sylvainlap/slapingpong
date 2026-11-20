@@ -23,10 +23,12 @@ height = 0.09
 [node name="Shade" type="MeshInstance3D" parent="." unique_id=309722845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 material_override = SubResource("StandardMaterial3D_sugp2")
+cast_shadow = 0
 mesh = SubResource("CylinderMesh_0wfyh")
 
 [node name="Bulb" type="MeshInstance3D" parent="." unique_id=1257445789]
 material_override = SubResource("StandardMaterial3D_104d5")
+cast_shadow = 0
 mesh = SubResource("SphereMesh_kvoag")
 
 [node name="Spot" type="SpotLight3D" parent="." unique_id=690161978]

@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://c5aeb8v1d0u34"]
 
 [ext_resource type="Texture2D" uid="uid://os6mvojhtlxl" path="res://assets/textures/floor.png" id="1_0wfyh"]
+[ext_resource type="Script" uid="uid://dq74kfpf5npe6" path="res://scenes/main.gd" id="1_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://o42cqub1vxlc" path="res://assets/textures/wall.png" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://dfvwoi6jtyo4s" path="res://scenes/lamp/lamp.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://bxv5r4lqf8tyy" path="res://scenes/table/table.tscn" id="4_jyhfs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jyhfs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -44,7 +46,15 @@ albedo_texture = ExtResource("2_0wfyh")
 size = Vector2(14, 3)
 orientation = 2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qxbf1"]
+albedo_color = Color(0.9607843, 0.9490196, 0.92156863, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ov72x"]
+radius = 0.03
+height = 0.06
+
 [node name="Main" type="Node3D" unique_id=1592676493]
+script = ExtResource("1_tbgi4")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1387784227]
 environment = SubResource("Environment_tefeu")
@@ -86,3 +96,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.65)
 
 [node name="Lamp2" parent="." unique_id=2129690920 instance=ExtResource("3_sugp2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.65)
+
+[node name="Table" parent="." unique_id=1184491034 instance=ExtResource("4_jyhfs")]
+
+[node name="Ball" type="MeshInstance3D" parent="." unique_id=296914072]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_qxbf1")
+mesh = SubResource("SphereMesh_ov72x")
