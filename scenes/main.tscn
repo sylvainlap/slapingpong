@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://o42cqub1vxlc" path="res://assets/textures/wall.png" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://dfvwoi6jtyo4s" path="res://scenes/lamp/lamp.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bxv5r4lqf8tyy" path="res://scenes/table/table.tscn" id="4_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://22h5ou8x768n" path="res://scenes/ball/ball.tscn" id="6_tefeu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jyhfs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -46,13 +47,6 @@ albedo_texture = ExtResource("2_0wfyh")
 size = Vector2(14, 3)
 orientation = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qxbf1"]
-albedo_color = Color(0.9607843, 0.9490196, 0.92156863, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_ov72x"]
-radius = 0.03
-height = 0.06
-
 [node name="Main" type="Node3D" unique_id=1592676493]
 script = ExtResource("1_tbgi4")
 
@@ -66,7 +60,7 @@ light_energy = 0.2
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1818779372]
-transform = Transform3D(1, 0, 0, 0, 0.94551855, 0.32556814, 0, -0.32556814, 0.94551855, 0, 1.2, 3.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)
 fov = 48.0
 near = 0.1
 far = 60.0
@@ -76,30 +70,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 material_override = SubResource("StandardMaterial3D_yefw2")
 mesh = SubResource("PlaneMesh_yi2jr")
 
-[node name="WallBack" type="MeshInstance3D" parent="." unique_id=1115528892]
+[node name="WallBMesh" type="MeshInstance3D" parent="." unique_id=1115528892]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -7)
 material_override = SubResource("StandardMaterial3D_jyhfs")
 mesh = SubResource("PlaneMesh_sugp2")
 
-[node name="WallLeft" type="MeshInstance3D" parent="." unique_id=1200528171]
+[node name="WallLMesh" type="MeshInstance3D" parent="." unique_id=1200528171]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7, 0.5, 0)
 material_override = SubResource("StandardMaterial3D_sugp2")
 mesh = SubResource("PlaneMesh_0wfyh")
 
-[node name="WallRight" type="MeshInstance3D" parent="." unique_id=1421033460]
+[node name="WallRMesh" type="MeshInstance3D" parent="." unique_id=1421033460]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7, 0.5, 0)
 material_override = SubResource("StandardMaterial3D_0wfyh")
 mesh = SubResource("PlaneMesh_jyhfs")
 
 [node name="Lamp1" parent="." unique_id=2137622697 instance=ExtResource("3_sugp2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.9)
 
 [node name="Lamp2" parent="." unique_id=2129690920 instance=ExtResource("3_sugp2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.9)
 
 [node name="Table" parent="." unique_id=1184491034 instance=ExtResource("4_jyhfs")]
 
-[node name="Ball" type="MeshInstance3D" parent="." unique_id=296914072]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-material_override = SubResource("StandardMaterial3D_qxbf1")
-mesh = SubResource("SphereMesh_ov72x")
+[node name="Ball" parent="." unique_id=110802111 instance=ExtResource("6_tefeu")]
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1773761187]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
