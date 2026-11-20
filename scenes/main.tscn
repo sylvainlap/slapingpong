@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://c5aeb8v1d0u34"]
+
+[ext_resource type="Texture2D" uid="uid://os6mvojhtlxl" path="res://assets/textures/floor.png" id="1_0wfyh"]
+[ext_resource type="Texture2D" uid="uid://o42cqub1vxlc" path="res://assets/textures/wall.png" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://dfvwoi6jtyo4s" path="res://scenes/lamp/lamp.tscn" id="3_sugp2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jyhfs"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_tbgi4"]
+sky_material = SubResource("ProceduralSkyMaterial_jyhfs")
+
+[sub_resource type="Environment" id="Environment_tefeu"]
+background_mode = 2
+sky = SubResource("Sky_tbgi4")
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yefw2"]
+albedo_texture = ExtResource("1_0wfyh")
+uv1_scale = Vector3(7, 7, 7)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yi2jr"]
+size = Vector2(14, 14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jyhfs"]
+albedo_texture = ExtResource("2_0wfyh")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sugp2"]
+size = Vector2(14, 3)
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sugp2"]
+albedo_texture = ExtResource("2_0wfyh")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0wfyh"]
+size = Vector2(14, 3)
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0wfyh"]
+albedo_texture = ExtResource("2_0wfyh")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_jyhfs"]
+size = Vector2(14, 3)
+orientation = 2
+
+[node name="Main" type="Node3D" unique_id=1592676493]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1387784227]
+environment = SubResource("Environment_tefeu")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1181522210]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(0.6, 0.7019608, 1, 1)
+light_energy = 0.2
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1818779372]
+transform = Transform3D(1, 0, 0, 0, 0.94551855, 0.32556814, 0, -0.32556814, 0.94551855, 0, 1.2, 3.3)
+fov = 48.0
+near = 0.1
+far = 60.0
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=104297565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+material_override = SubResource("StandardMaterial3D_yefw2")
+mesh = SubResource("PlaneMesh_yi2jr")
+
+[node name="WallBack" type="MeshInstance3D" parent="." unique_id=1115528892]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -7)
+material_override = SubResource("StandardMaterial3D_jyhfs")
+mesh = SubResource("PlaneMesh_sugp2")
+
+[node name="WallLeft" type="MeshInstance3D" parent="." unique_id=1200528171]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_sugp2")
+mesh = SubResource("PlaneMesh_0wfyh")
+
+[node name="WallRight" type="MeshInstance3D" parent="." unique_id=1421033460]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_0wfyh")
+mesh = SubResource("PlaneMesh_jyhfs")
+
+[node name="Lamp1" parent="." unique_id=2137622697 instance=ExtResource("3_sugp2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.65)
+
+[node name="Lamp2" parent="." unique_id=2129690920 instance=ExtResource("3_sugp2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.65)
