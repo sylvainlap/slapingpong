@@ -18,9 +18,9 @@ enum State { SERVE, PLAY, POINT, GAMEOVER }
 @export var camera_shake_intensity: float = 0.03
 
 var _state: State = State.SERVE
-# 0 = local player, 1 = other player
-var _server: int = 0
-var _last_hitter: int = 0
+# 1 is local player, -1 is the other player
+var _server: int = 1
+var _last_hitter: int = 1
 var _player_x: float = 0.0
 var _player_z: float = 0.0
 var _ball_position: Vector3 = Vector3.ZERO
@@ -28,11 +28,14 @@ var _ball_velocity: Vector3 = Vector3.ZERO
 var _camera_shake: float = 0.0
 var _mouse_button_left_pressed: bool = false
 var _mouse_button_right_pressed: bool = false
-var _serve_timer: float = 0.0
+var _timer: float = 0.0
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _ball_radius: float = 0.03
 var _table_size_x: float = 1.5
 var _table_size_z: float = 2.8
+var _serve_bounced: bool = false
+var _already_bounced: bool = false
+var _score: Dictionary = { 1: 0, -1: 0 }
 
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var label_3d: Label3D = $Label3D
@@ -61,18 +64,20 @@ func _physics_process(delta: float) -> void:
 			_serve(delta)
 		State.PLAY:
 			_play(delta)
+		State.POINT:
+			_point(delta)
 			
 	_update_visuals(delta)
+	_mouse_button_left_pressed = false
 
 
 func _reset_serve() -> void:
 	_state = State.SERVE
-	_last_hitter = 0
-	if _server == 0:
+	if _server == 1:
 		label_3d.text = "Clic pour servir\nSouris pour bouger\nSmash : clic gauche\nAmorti : clic droit"
 	else:
 		label_3d.text = "L'autre sert..."
-	_serve_timer = 1.0
+	_timer = 1.0
 
 
 func _update_player(delta: float) -> void:
@@ -83,14 +88,11 @@ func _update_player(delta: float) -> void:
 	_player_x = move_toward(_player_x, lerpf(paddle_x_min, paddle_x_max, x), delta * 6.0)
 	
 	# fix z when serve
-	if _state == State.SERVE and _server == 0:
-		_player_z = move_toward(_player_z, paddle_z_max, delta * 6.0)
+	if _state == State.SERVE and _server == 1:
+		_player_z = move_toward(_player_z, paddle_z_max * _server, delta * 6.0)
 	else:
 		var z: float = clampf((get_viewport().get_mouse_position().y / screen_size_y), 0.0, 1.0)
 		_player_z = move_toward(_player_z, lerpf(paddle_z_min, paddle_z_max, z), delta * 6.0)
-		print("(x,z) : (" + str(x) + "," + str(z) + ")")
-
-	print("(player) : (" + str(_player_x) + "," + str(_player_z) + ")")
 
 
 func _update_visuals(delta: float) -> void:
@@ -111,14 +113,14 @@ func _update_visuals(delta: float) -> void:
 
 
 func _serve(delta: float) -> void:
-	if _server == 0:
-		_ball_position = Vector3(_player_x, 0.45, 1.5)
+	if _server == 1:
+		_ball_position = Vector3(_player_x, paddle_y + 0.3, paddle_z_max)
 		if _mouse_button_left_pressed:
 			_launch_serve(_player_x)
 	else:
-		_ball_position = Vector3(0.0, 0.45, -1.5)
-		_serve_timer -= delta
-		if _serve_timer <= 0.0:
+		_ball_position = Vector3(0.0, paddle_y + 0.3, -paddle_z_max)
+		_timer -= delta
+		if _timer <= 0.0:
 			_launch_serve(0.0)
 
 
@@ -126,8 +128,8 @@ func _launch_serve(x: float) -> void:
 	_ball_velocity = Vector3((randf_range(-0.5, 0.5) - x) / 0.95, 0.0, -2.9)
 	_last_hitter = _server
 	_state = State.PLAY
-	#bounced_opp = false
-	#serve_own_bounce_ok = true
+	_already_bounced = false
+	_serve_bounced = false
 	#rally = 0
 	label_3d.text = ""
 	#_pop(paddle_p if server == 1 else paddle_a, 40.0)
@@ -145,12 +147,57 @@ func _table_bounce() -> int:
 		_ball_velocity.y = -_ball_velocity.y * rebound_strengh
 		_ball_velocity.x *= 0.98
 		_ball_velocity.z *= 0.98
-		return 1 if _ball_position.z > 0.0 else -1
+		if _ball_position.z > 0.0:
+			return 1
+		else:
+			return -1
 	return 0
 
 
 func _play(delta: float) -> void:
 	_apply_velocity_to_ball(delta)
 	
-	# bounce
-	_table_bounce()
+	var bounced: int = _table_bounce()
+	
+	if bounced != 0:
+		if bounced == _last_hitter:
+			if !_serve_bounced:
+				_serve_bounced = true
+			else:
+				_end_point(-_last_hitter)
+		elif _already_bounced:
+			_end_point(_last_hitter)
+		else:
+			_already_bounced = true
+	
+	# out
+	if _ball_position.y <= 0.0:
+		if _already_bounced:
+			_end_point(_last_hitter)
+		else:
+			_end_point(-_last_hitter)
+
+
+func _end_point(winner: int) -> void:
+	_score[winner] += 1
+	_state = State.POINT
+	_timer = 2.0
+	if winner == 1:
+		label_3d.text = "Point pour toi !"
+	elif winner == -1:
+		label_3d.text = "Point pour l'IA"
+
+
+func _point(delta: float) -> void:
+	_timer -= delta
+	if _timer <= 0.0:
+		_update_server()
+		_reset_serve()
+
+
+func _update_server() -> void:
+	var total: int = _score[1] + _score[-1]
+	if total % 2 == 0:
+		_server = -_server
+	else:
+		_server = _server
