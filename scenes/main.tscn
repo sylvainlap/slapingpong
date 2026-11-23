@@ -94,7 +94,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.9)
 
 [node name="Table" parent="." unique_id=1184491034 instance=ExtResource("4_jyhfs")]
 
-[node name="Paddle" parent="." unique_id=1066392889 instance=ExtResource("6_o6xl0")]
+[node name="PaddleLocal" parent="." unique_id=1066392889 instance=ExtResource("6_o6xl0")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.2, 1.7)
+
+[node name="PaddleRemote" parent="." unique_id=106906390 instance=ExtResource("6_o6xl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -1.7)
 
 [node name="Ball" parent="." unique_id=110802111 instance=ExtResource("6_tefeu")]
 

@@ -24,6 +24,53 @@ window/stretch/aspect="expand"
 
 common/auto_focus_strategy=1
 
+[input]
+
+left_click={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,
+"resource_local_to_scene": false,
+"resource_name": "",
+"device": -1,
+"window_id": 0,
+"alt_pressed": false,
+"shift_pressed": false,
+"ctrl_pressed": false,
+"meta_pressed": false,
+"button_mask": 1,
+"position": Vector2(87, 8),
+"global_position": Vector2(96, 56),
+"factor": 1.0,
+"button_index": 1,
+"canceled": false,
+"pressed": true,
+"double_click": false,
+"script": null
+)]
+}
+right_click={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,
+"resource_local_to_scene": false,
+"resource_name": "",
+"device": -1,
+"window_id": 0,
+"alt_pressed": false,
+"shift_pressed": false,
+"ctrl_pressed": false,
+"meta_pressed": false,
+"button_mask": 2,
+"position": Vector2(123, 8),
+"global_position": Vector2(132, 56),
+"factor": 1.0,
+"button_index": 2,
+"canceled": false,
+"pressed": true,
+"double_click": false,
+"script": null
+)]
+}
+
 [input_devices]
 
 joypads/ignore_joypad_on_unfocused_application=true
