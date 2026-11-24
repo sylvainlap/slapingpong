@@ -7,13 +7,8 @@ albedo_color = Color(0.9607843, 0.9490196, 0.92156863, 1)
 radius = 0.03
 height = 0.06
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5a6bx"]
-
 [node name="Ball" type="Node3D" unique_id=110802111]
 
 [node name="BallMesh" type="MeshInstance3D" parent="." unique_id=1367959614]
 material_override = SubResource("StandardMaterial3D_tefeu")
 mesh = SubResource("SphereMesh_tbgi4")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1293378469]
-replication_config = SubResource("SceneReplicationConfig_5a6bx")
