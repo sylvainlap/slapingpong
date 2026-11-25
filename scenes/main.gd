@@ -1,5 +1,7 @@
 # TODO: use LimboAI
 # TODO: ce serait pas plus intelligible de mettre du code dans des scripts de scenes ?
+# TODO: la rotation de la raquette au shot n'est pas bonne
+# TODO: update Hud via signals ?
 
 extends Node3D
 
@@ -50,6 +52,13 @@ const PADDLE_HIT_MAX_HEIGHT: float = 0.55
 @export var mouse_sensitivity: float = 0.002
 @export var mouse_responsiveness: float = 30.0
 @export var camera_shake_intensity: float = 0.03
+@export_category("UI")
+@export var player_score_label: Label
+@export var ai_score_label: Label
+@export var player_server_panel: Panel
+@export var ai_serve_panel: Panel
+@export var flash_label: Label
+@export var status_label: Label
 
 var _state: State = State.SERVE
 var _score: Dictionary = { PLAYER_SIDE: 0, AI_SIDE: 0 }
@@ -86,7 +95,7 @@ var _ai_positioning_error := 0.0
 
 var _camera_shake: float = 0.0
 var _mouse_motion: Vector2 = Vector2.ZERO
-var _announcement_tween: Tween
+var _flash_tween: Tween
 var _base_mouse_sensitivity: float = 0.002
 
 #@onready var game_menu: GameMenu = $GameMenu
@@ -95,12 +104,6 @@ var _base_mouse_sensitivity: float = 0.002
 @onready var paddle_player: Node3D = $PaddlePlayer
 @onready var paddle_ai: Node3D = $PaddleAI
 @onready var ball: Node3D = $Ball
-#@onready var player_score_label: Label = %PlayerScoreLabel
-#@onready var ai_score_label: Label = %AiScoreLabel
-#@onready var player_serve_indicator: Panel = %PlayerServeIndicator
-#@onready var ai_serve_indicator: Panel = %AiServeIndicator
-#@onready var status_message_label: Label = %StatusMessageLabel
-#@onready var announcement_label: Label = %AnnouncementLabel
 @onready var hit_player: AudioStreamPlayer3D = $Sfx/HitPlayer
 @onready var bounce_player: AudioStreamPlayer3D = $Sfx/BouncePlayer
 @onready var score_player: AudioStreamPlayer3D = $Sfx/ScorePlayer
@@ -470,15 +473,14 @@ func _update_hud() -> void:
 	pass
 
 
-func _show_announcement(text: String) -> void:
-	#announcement_label.text = text
-	#announcement_label.modulate.a = 1.0
-	#if _announcement_tween:
-	#	_announcement_tween.kill()
-	#_announcement_tween = create_tween()
-	#_announcement_tween.tween_interval(0.4)
-	#_announcement_tween.tween_property(announcement_label, "modulate:a", 0.0, 0.3)
-	pass
+func _show_flash(text_in: String) -> void:
+	flash_label.text = text_in
+	flash_label.modulate.a = 1.0
+	if _flash_tween:
+		_flash_tween.kill()
+	_flash_tween = create_tween()
+	_flash_tween.tween_interval(0.4)
+	_flash_tween.tween_property(flash_label, "modulate:a", 0.0, 0.3)
 
 
 func _play_hit_sound(shot_in: Shot) -> void:
@@ -594,7 +596,7 @@ func _try_hit_ball(side_in: int, x_in: float) -> void:
 	
 	if shot != Shot.NORMAL:
 		var announcer_prefix: String = "" if side_in == PLAYER_SIDE else "IA : "
-		_show_announcement(announcer_prefix + ("Smash !" if shot == Shot.SMASH else "Amorti"))
+		_show_flash(announcer_prefix + ("Smash !" if shot == Shot.SMASH else "Amorti"))
 
 
 ## Calcule la vitesse de la balle pour qu'elle rebondisse en (target_x, profondeur voulue de l'autre côté)

@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://caod244jyjkpt"]
+
+[node name="Hud" type="CanvasLayer" unique_id=1993853115]
+
+[node name="ScoreContainer" type="PanelContainer" parent="." unique_id=1075740698]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScoreContainer" unique_id=348070412]
+layout_mode = 2
+
+[node name="PlayerScoreContainer" type="VBoxContainer" parent="ScoreContainer/HBoxContainer" unique_id=1112856772]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer" unique_id=1326807909]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer" unique_id=111672250]
+layout_mode = 2
+text = "Toi"
+
+[node name="PlayerServerPanel" type="Panel" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer" unique_id=1150646536]
+layout_mode = 2
+
+[node name="PlayerScoreLabel" type="Label" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer" unique_id=839083659]
+layout_mode = 2
+text = "0"
+
+[node name="Label" type="Label" parent="ScoreContainer/HBoxContainer" unique_id=766445254]
+layout_mode = 2
+text = ":"
+
+[node name="AIScoreContainer" type="VBoxContainer" parent="ScoreContainer/HBoxContainer" unique_id=686421352]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScoreContainer/HBoxContainer/AIScoreContainer" unique_id=992197928]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer" unique_id=1953545740]
+layout_mode = 2
+text = "IA"
+
+[node name="IAServerPanel" type="Panel" parent="ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer" unique_id=1049523975]
+layout_mode = 2
+
+[node name="IAScoreLabel" type="Label" parent="ScoreContainer/HBoxContainer/AIScoreContainer" unique_id=119554800]
+layout_mode = 2
+text = "0"
+
+[node name="FlashLabel" type="Label" parent="." unique_id=223746659]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+
+[node name="StatusLabel" type="Label" parent="." unique_id=1396064055]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
