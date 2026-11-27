@@ -56,14 +56,13 @@ const PADDLE_HIT_MAX_HEIGHT: float = 0.55
 @export var player_score_label: Label
 @export var ai_score_label: Label
 @export var player_server_panel: Panel
-@export var ai_serve_panel: Panel
+@export var ai_server_panel: Panel
 @export var flash_label: Label
 @export var status_label: Label
 
 var _state: State = State.SERVE
 var _score: Dictionary = { PLAYER_SIDE: 0, AI_SIDE: 0 }
 var _server: int = PLAYER_SIDE
-var _message: String = ""
 var _timer: float = 0.0
 
 var _ball_position: Vector3 = Vector3.ZERO
@@ -119,6 +118,8 @@ func _ready() -> void:
 	#game_menu.ai_difficulty_changed.connect(set_difficulty)
 	#game_menu.mouse_sensitivity_changed.connect(_on_mouse_sensitivity_multiplier_changed)
 	_base_mouse_sensitivity = mouse_sensitivity
+	_show_status("")
+	_show_flash("")
 	start_new_game()
 
 
@@ -201,9 +202,9 @@ func _reset_serve() -> void:
 	_ball_velocity = Vector3.ZERO
 	
 	if _server == PLAYER_SIDE:
-		_message = "Clic pour servir\nSouris pour bouger\nSmash : clic gauche\nAmorti : clic droit"
+		_show_status("Clic pour servir\nSouris pour bouger\nSmash : clic gauche\nAmorti : clic droit")
 	else:
-		_message = "L'autre sert..."
+		_show_status("L'autre sert...")
 		_timer = ai_serve_timer
 
 
@@ -220,9 +221,9 @@ func _serve_state(delta: float) -> void:
 
 
 func _launch_serve(x_in: float) -> void:
+	_show_status("")
 	_ball_velocity = Vector3((randf_range(-0.5, 0.5) - x_in) / 0.95, 0.0, serve_speed * -_server)
 	_last_hitter = _server
-	_message = ""
 	_state = State.PLAY
 	_animate_paddle_swing(paddle_player if _server == PLAYER_SIDE else paddle_ai, 40.0)
 	_play_hit_sound(Shot.NORMAL)
@@ -346,14 +347,14 @@ func _end_point(winner: int, reason: String = "") -> void:
 	_play_score_sound()
 	
 	var result_text: String = "Point pour toi !" if winner == PLAYER_SIDE else "Point pour l'IA"
-	_message = (reason + "\n" if reason != "" else "") + result_text
+	_show_status((reason + "\n" if reason != "" else "") + result_text)
 	
 	var player_points: int = _score[PLAYER_SIDE]
 	var ai_points: int = _score[AI_SIDE]
 	var has_reached_target: bool = player_points >= points_to_win or ai_points >= points_to_win
 	if has_reached_target and absi(player_points - ai_points) >= 2:
 		_state = State.GAMEOVER
-		_message = ("Victoire !" if player_points > ai_points else "Défaite...") + "\nClic pour rejouer"
+		_show_status(("Victoire !" if player_points > ai_points else "Défaite...") + "\nClic pour rejouer")
 
 
 func _let_ball_fall(delta: float) -> void:
@@ -459,18 +460,20 @@ func _animate_paddle_swing(paddle: Node3D, swing_degrees: float) -> void:
 
 
 func _update_hud() -> void:
-	#var player_score_text: String = str(_score[PLAYER_SIDE])
-	#var ai_score_text: String = str(_score[AI_SIDE])
-	#if player_score_label.text != player_score_text:
-	#	player_score_label.text = player_score_text
-	#if ai_score_label.text != ai_score_text:
-	#	ai_score_label.text = ai_score_text
-	## la pastille dorée indique qui sert
-	#player_serve_indicator.modulate.a = 1.0 if _server == PLAYER_SIDE else 0.0
-	#ai_serve_indicator.modulate.a = 1.0 if _server == AI_SIDE else 0.0
-	#if status_message_label.text != _message:
-	#	status_message_label.text = _message
+	# TODO: to remove, no need to execute each frame
+	var player_score_text: String = str(_score[PLAYER_SIDE])
+	var ai_score_text: String = str(_score[AI_SIDE])
+	if player_score_label.text != player_score_text:
+		player_score_label.text = player_score_text
+	if ai_score_label.text != ai_score_text:
+		ai_score_label.text = ai_score_text
+	player_server_panel.modulate.a = 1.0 if _server == PLAYER_SIDE else 0.0
+	ai_server_panel.modulate.a = 1.0 if _server == AI_SIDE else 0.0
 	pass
+
+
+func _show_status(text_in: String) -> void:
+	status_label.text = text_in
 
 
 func _show_flash(text_in: String) -> void:
@@ -594,9 +597,10 @@ func _try_hit_ball(side_in: int, x_in: float) -> void:
 	_animate_paddle_swing(paddle_player if side_in == PLAYER_SIDE else paddle_ai, swing_degrees)
 	_play_hit_sound(shot)
 	
-	if shot != Shot.NORMAL:
-		var announcer_prefix: String = "" if side_in == PLAYER_SIDE else "IA : "
-		_show_flash(announcer_prefix + ("Smash !" if shot == Shot.SMASH else "Amorti"))
+	if shot == Shot.SMASH:
+		_show_flash("Smash !")
+	elif shot == Shot.DROP:
+		_show_flash("Amorti...")
 
 
 ## Calcule la vitesse de la balle pour qu'elle rebondisse en (target_x, profondeur voulue de l'autre côté)

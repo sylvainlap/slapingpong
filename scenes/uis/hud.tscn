@@ -1,69 +1,120 @@
 [gd_scene format=3 uid="uid://caod244jyjkpt"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ioyky"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.03137255, 0.039215688, 0.05882353, 0.54901963)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jvosa"]
+bg_color = Color(1, 0.8509804, 0.4509804, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inh3s"]
+bg_color = Color(1, 0.8509804, 0.4509804, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="Hud" type="CanvasLayer" unique_id=1993853115]
 
-[node name="ScoreContainer" type="PanelContainer" parent="." unique_id=1075740698]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 40.0
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1178458882]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScoreContainer" unique_id=348070412]
+[node name="ScoreContainer" type="PanelContainer" parent="MarginContainer" unique_id=1075740698]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ioyky")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScoreContainer" unique_id=348070412]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="PlayerScoreContainer" type="VBoxContainer" parent="MarginContainer/ScoreContainer/HBoxContainer" unique_id=1112856772]
 layout_mode = 2
 
-[node name="PlayerScoreContainer" type="VBoxContainer" parent="ScoreContainer/HBoxContainer" unique_id=1112856772]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScoreContainer/HBoxContainer/PlayerScoreContainer" unique_id=1326807909]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer" unique_id=1326807909]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer" unique_id=111672250]
+[node name="Label" type="Label" parent="MarginContainer/ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer" unique_id=111672250]
 layout_mode = 2
 text = "Toi"
 
-[node name="PlayerServerPanel" type="Panel" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer" unique_id=1150646536]
+[node name="PlayerServerPanel" type="Panel" parent="MarginContainer/ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer" unique_id=1150646536]
+custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_jvosa")
 
-[node name="PlayerScoreLabel" type="Label" parent="ScoreContainer/HBoxContainer/PlayerScoreContainer" unique_id=839083659]
+[node name="PlayerScoreLabel" type="Label" parent="MarginContainer/ScoreContainer/HBoxContainer/PlayerScoreContainer" unique_id=839083659]
 layout_mode = 2
+theme_override_font_sizes/font_size = 48
 text = "0"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="ScoreContainer/HBoxContainer" unique_id=766445254]
+[node name="Label" type="Label" parent="MarginContainer/ScoreContainer/HBoxContainer" unique_id=766445254]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = ":"
 
-[node name="AIScoreContainer" type="VBoxContainer" parent="ScoreContainer/HBoxContainer" unique_id=686421352]
+[node name="AIScoreContainer" type="VBoxContainer" parent="MarginContainer/ScoreContainer/HBoxContainer" unique_id=686421352]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScoreContainer/HBoxContainer/AIScoreContainer" unique_id=992197928]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScoreContainer/HBoxContainer/AIScoreContainer" unique_id=992197928]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer" unique_id=1953545740]
+[node name="Label" type="Label" parent="MarginContainer/ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer" unique_id=1953545740]
 layout_mode = 2
 text = "IA"
 
-[node name="IAServerPanel" type="Panel" parent="ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer" unique_id=1049523975]
+[node name="IAServerPanel" type="Panel" parent="MarginContainer/ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer" unique_id=1049523975]
+custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_inh3s")
 
-[node name="IAScoreLabel" type="Label" parent="ScoreContainer/HBoxContainer/AIScoreContainer" unique_id=119554800]
+[node name="IAScoreLabel" type="Label" parent="MarginContainer/ScoreContainer/HBoxContainer/AIScoreContainer" unique_id=119554800]
 layout_mode = 2
+theme_override_font_sizes/font_size = 48
 text = "0"
+horizontal_alignment = 1
 
-[node name="FlashLabel" type="Label" parent="." unique_id=223746659]
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 23.0
-grow_horizontal = 2
+[node name="FlashLabel" type="Label" parent="MarginContainer" unique_id=223746659]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 48
+text = "Flash message"
 
-[node name="StatusLabel" type="Label" parent="." unique_id=1396064055]
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -23.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="StatusLabel" type="Label" parent="MarginContainer" unique_id=1396064055]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+text = "Status Message"
 horizontal_alignment = 1

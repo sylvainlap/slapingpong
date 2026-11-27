@@ -53,14 +53,14 @@ albedo_texture = ExtResource("2_0wfyh")
 size = Vector2(14, 3)
 orientation = 2
 
-[node name="Main" type="Node3D" unique_id=1592676493 node_paths=PackedStringArray("player_score_label", "ai_score_label", "player_server_panel", "ai_serve_panel", "flash_label", "status_label")]
+[node name="Main" type="Node3D" unique_id=1592676493 node_paths=PackedStringArray("player_score_label", "ai_score_label", "player_server_panel", "ai_server_panel", "flash_label", "status_label")]
 script = ExtResource("1_tbgi4")
-player_score_label = NodePath("Hud/ScoreContainer/HBoxContainer/PlayerScoreContainer/PlayerScoreLabel")
-ai_score_label = NodePath("Hud/ScoreContainer/HBoxContainer/AIScoreContainer/IAScoreLabel")
-player_server_panel = NodePath("Hud/ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer/PlayerServerPanel")
-ai_serve_panel = NodePath("Hud/ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer/IAServerPanel")
-flash_label = NodePath("Hud/FlashLabel")
-status_label = NodePath("Hud/StatusLabel")
+player_score_label = NodePath("Hud/MarginContainer/ScoreContainer/HBoxContainer/PlayerScoreContainer/PlayerScoreLabel")
+ai_score_label = NodePath("Hud/MarginContainer/ScoreContainer/HBoxContainer/AIScoreContainer/IAScoreLabel")
+player_server_panel = NodePath("Hud/MarginContainer/ScoreContainer/HBoxContainer/PlayerScoreContainer/HBoxContainer/PlayerServerPanel")
+ai_server_panel = NodePath("Hud/MarginContainer/ScoreContainer/HBoxContainer/AIScoreContainer/HBoxContainer/IAServerPanel")
+flash_label = NodePath("Hud/MarginContainer/FlashLabel")
+status_label = NodePath("Hud/MarginContainer/StatusLabel")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1387784227]
 environment = SubResource("Environment_tefeu")
