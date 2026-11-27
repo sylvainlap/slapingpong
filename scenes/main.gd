@@ -1,9 +1,16 @@
 # TODO: use LimboAI
 # TODO: ce serait pas plus intelligible de mettre du code dans des scripts de scenes ?
 # TODO: la rotation de la raquette au shot n'est pas bonne
-# TODO: update Hud via signals ?
+# TODO: supprimer les _in
+
 class_name Main
 extends Node3D
+
+signal player_score_updated(score: int)
+signal ai_score_updated(score: int)
+signal server_updated(server: int)
+signal status_message_updated(message: String)
+signal flash_message_updated(message: String)
 
 enum State { SERVE, PLAY, POINT, GAMEOVER }
 enum Shot { NORMAL, SMASH, DROP }
@@ -52,18 +59,21 @@ const PADDLE_HIT_MAX_HEIGHT: float = 0.55
 @export var mouse_sensitivity: float = 0.002
 @export var mouse_responsiveness: float = 30.0
 @export var camera_shake_intensity: float = 0.03
-@export_category("UI")
-@export var player_score_label: Label
-@export var ai_score_label: Label
-@export var player_server_panel: Panel
-@export var ai_server_panel: Panel
-@export var flash_label: Label
-@export var status_label: Label
 
 var _state: State = State.SERVE
-var _score: Dictionary = { PLAYER_SIDE: 0, AI_SIDE: 0 }
-var _server: int = PLAYER_SIDE
+var _server: int = PLAYER_SIDE:
+	set(value):
+		_server = value
+		server_updated.emit(value)
 var _timer: float = 0.0
+var _status_message: String = "":
+	set(value):
+		_status_message = value
+		status_message_updated.emit(value)
+var _flash_message: String = "":
+	set(value):
+		_flash_message = value
+		flash_message_updated.emit(value)
 
 var _ball_position: Vector3 = Vector3.ZERO
 var _previous_ball_position: Vector3 = Vector3.ZERO
@@ -80,23 +90,29 @@ var _player_paddle_x: float = 0.0
 var _player_paddle_velocity_x: float = 0.0
 var _player_paddle_target_z: float = paddle_z_max
 var _player_paddle_z: float = paddle_z_max
-var _previous_player_paddle_z := 0.0
-var _player_paddle_velocity_z := 0.0
+var _previous_player_paddle_z: float = 0.0
+var _player_paddle_velocity_z: float = 0.0
+var _player_score: int = 0:
+	set(value):
+		_player_score = value
+		player_score_updated.emit(value)
 
 var _ai_paddle_target_x: float = 0.0
 var _ai_paddle_x: float = 0.0
 var _ai_paddle_velocity_x: float = 0.0
 var _ai_paddle_target_z: float = -paddle_z_max
-var _ai_paddle_z := 0.0
-var _previous_ai_paddle_z := 0.0
-var _ai_paddle_velocity_z := 0.0
-var _ai_positioning_error := 0.0
+var _ai_paddle_z: float = 0.0
+var _previous_ai_paddle_z: float = 0.0
+var _ai_paddle_velocity_z: float = 0.0
+var _ai_positioning_error: float = 0.0
+var _ai_score: int = 0:
+	set(value):
+		_ai_score = value
+		ai_score_updated.emit(value)
 
 var _camera_shake: float = 0.0
 var _mouse_motion: Vector2 = Vector2.ZERO
-var _flash_tween: Tween
 var _base_mouse_sensitivity: float = 0.002
-
 
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var paddle_player: Node3D = $PaddlePlayer
@@ -113,9 +129,13 @@ func _ready() -> void:
 	menu.play_local.connect(_on_play_local)
 	#game_menu.ai_difficulty_changed.connect(set_difficulty)
 	#game_menu.mouse_sensitivity_changed.connect(_on_mouse_sensitivity_multiplier_changed)
+	# fullscreen
+	#var is_currently_fullscreen := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	#if bool(settings["fullscreen"]) != is_currently_fullscreen:
+	#	var target_mode := DisplayServer.WINDOW_MODE_FULLSCREEN if settings["fullscreen"] else DisplayServer.WINDOW_MODE_WINDOWED
+	#	DisplayServer.window_set_mode(target_mode)
 	_base_mouse_sensitivity = mouse_sensitivity
-	_show_status("")
-	_show_flash("")
+	print("main _ready done.")
 
 
 func _input(event: InputEvent) -> void:
@@ -138,7 +158,6 @@ func _physics_process(delta: float) -> void:
 			_game_over_state(delta)
 			
 	_update_visuals(delta)
-	_update_hud()
 
 
 func set_mouse_sensitivity(mouse_sensitivity_in: float) -> void:
@@ -165,7 +184,8 @@ func set_difficulty(difficulty_in: int) -> void:
 
 
 func _start_new_game() -> void:
-	_score = { PLAYER_SIDE: 0, AI_SIDE: 0 }
+	_player_score = 0
+	_ai_score = 0
 	_server = PLAYER_SIDE
 	_player_paddle_x = 0.0
 	_player_paddle_z = paddle_z_max
@@ -186,9 +206,9 @@ func _reset_serve() -> void:
 	_ball_velocity = Vector3.ZERO
 	
 	if _server == PLAYER_SIDE:
-		_show_status("Clic pour servir\nSouris pour bouger\nSmash : clic gauche\nAmorti : clic droit")
+		_status_message = "Clic pour servir\nSouris pour bouger\nSmash : clic gauche\nAmorti : clic droit"
 	else:
-		_show_status("L'autre sert...")
+		_status_message = "L'autre sert..."
 		_timer = ai_serve_timer
 
 
@@ -205,7 +225,7 @@ func _serve_state(delta: float) -> void:
 
 
 func _launch_serve(x_in: float) -> void:
-	_show_status("")
+	_status_message = ""
 	_ball_velocity = Vector3((randf_range(-0.5, 0.5) - x_in) / 0.95, 0.0, serve_speed * -_server)
 	_last_hitter = _server
 	_state = State.PLAY
@@ -323,22 +343,24 @@ func _choose_shot(side_in: int) -> Shot:
 
 func _end_point(winner: int, reason: String = "") -> void:
 	if _state != State.PLAY:
-		return      # le point est déjà terminé (évite de le compter deux fois dans la même frame)
+		return
 	
-	_score[winner] += 1
+	if winner == PLAYER_SIDE:
+		_player_score += 1
+	elif winner == AI_SIDE:
+		_ai_score += 1
+
 	_state = State.POINT
 	_timer = 2.0
 	_play_score_sound()
 	
 	var result_text: String = "Point pour toi !" if winner == PLAYER_SIDE else "Point pour l'IA"
-	_show_status((reason + "\n" if reason != "" else "") + result_text)
+	_status_message = (reason + "\n" if reason != "" else "") + result_text
 	
-	var player_points: int = _score[PLAYER_SIDE]
-	var ai_points: int = _score[AI_SIDE]
-	var has_reached_target: bool = player_points >= points_to_win or ai_points >= points_to_win
-	if has_reached_target and absi(player_points - ai_points) >= 2:
+	var has_reached_target: bool = _player_score >= points_to_win or _ai_score >= points_to_win
+	if has_reached_target and absi(_player_score - _ai_score) >= 2:
 		_state = State.GAMEOVER
-		_show_status(("Victoire !" if player_points > ai_points else "Défaite...") + "\nClic pour rejouer")
+		_status_message = ("Victoire !" if _player_score > _ai_score else "Défaite...") + "\nClic pour rejouer"
 
 
 func _let_ball_fall(delta: float) -> void:
@@ -361,8 +383,8 @@ func _game_over_state(delta: float) -> void:
 
 
 func _update_server() -> void:
-	var total: int = _score[PLAYER_SIDE] + _score[AI_SIDE]
-	var is_deuce_phase: bool = _score[PLAYER_SIDE] >= 10 and _score[AI_SIDE] >= 10
+	var total: int = _player_score + _ai_score
+	var is_deuce_phase: bool = _player_score >= 10 and _ai_score >= 10
 	if is_deuce_phase or total % 2 == 0:
 		_server = -_server
 
@@ -441,33 +463,6 @@ func _animate_paddle_swing(paddle: Node3D, swing_degrees: float) -> void:
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(paddle, "scale", Vector3.ONE, 0.15)
 	tween.tween_property(paddle, "rotation:x", 0.0, 0.2)
-
-
-func _update_hud() -> void:
-	# TODO: to remove, no need to execute each frame
-	var player_score_text: String = str(_score[PLAYER_SIDE])
-	var ai_score_text: String = str(_score[AI_SIDE])
-	if player_score_label.text != player_score_text:
-		player_score_label.text = player_score_text
-	if ai_score_label.text != ai_score_text:
-		ai_score_label.text = ai_score_text
-	player_server_panel.modulate.a = 1.0 if _server == PLAYER_SIDE else 0.0
-	ai_server_panel.modulate.a = 1.0 if _server == AI_SIDE else 0.0
-	pass
-
-
-func _show_status(text_in: String) -> void:
-	status_label.text = text_in
-
-
-func _show_flash(text_in: String) -> void:
-	flash_label.text = text_in
-	flash_label.modulate.a = 1.0
-	if _flash_tween:
-		_flash_tween.kill()
-	_flash_tween = create_tween()
-	_flash_tween.tween_interval(0.4)
-	_flash_tween.tween_property(flash_label, "modulate:a", 0.0, 0.3)
 
 
 func _play_hit_sound(shot_in: Shot) -> void:
@@ -575,9 +570,9 @@ func _try_hit_ball(side_in: int, x_in: float) -> void:
 	_play_hit_sound(shot)
 	
 	if shot == Shot.SMASH:
-		_show_flash("Smash !")
+		_flash_message = "Smash !"
 	elif shot == Shot.DROP:
-		_show_flash("Amorti...")
+		_flash_message = "Amorti..."
 
 
 ## Calcule la vitesse de la balle pour qu'elle rebondisse en (target_x, profondeur voulue de l'autre côté)

@@ -70,16 +70,32 @@ theme_override_font_sizes/font_size = 32
 text = "Paramètres"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=842841355]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=1341846886]
 custom_minimum_size = Vector2(384, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer" unique_id=959553900]
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer" unique_id=1054181392]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "Nom du joueur"
+
+[node name="PlayerNameLineEdit" type="LineEdit" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer" unique_id=395319148]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=842841355]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2" unique_id=959553900]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 text = "Sensibilité souris"
 
-[node name="MouseSensitivitySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer" unique_id=1510045913]
+[node name="MouseSensitivitySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2" unique_id=1510045913]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 0.5
@@ -87,16 +103,17 @@ max_value = 3.0
 step = 0.5
 value = 1.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=1796003429]
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=1796003429]
 custom_minimum_size = Vector2(384, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2" unique_id=1661565070]
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3" unique_id=1661565070]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 text = "Difficulté de l'IA"
 
-[node name="DifficultyOptionButton" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2" unique_id=221014673]
+[node name="DifficultyOptionButton" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3" unique_id=221014673]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 1
@@ -108,17 +125,22 @@ popup/item_1/id = 1
 popup/item_2/text = "Difficile"
 popup/item_2/id = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=300795320]
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=300795320]
 custom_minimum_size = Vector2(384, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3" unique_id=808925557]
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer4" unique_id=808925557]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 text = "Plein écran"
 
-[node name="FullscreenCheckBox" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3" unique_id=99879163]
+[node name="FullscreenCheckButton" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer4" unique_id=661900421]
+unique_name_in_owner = true
 layout_mode = 2
+
+[node name="ApplyButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=559583311]
+layout_mode = 2
+text = "Appliquer"
 
 [node name="BackButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=350761305]
 layout_mode = 2
@@ -127,5 +149,5 @@ text = "Retour"
 [connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer/PlayLocalButton" to="." method="_on_play_local_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="value_changed" from="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer/MouseSensitivitySlider" to="." method="_on_mouse_sensitivity_slider_value_changed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/ApplyButton" to="." method="_on_apply_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/BackButton" to="." method="_on_back_button_pressed"]
