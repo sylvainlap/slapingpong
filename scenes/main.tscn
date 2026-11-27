@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://cwwog3ai7kben" path="res://assets/sounds/score.wav" id="10_choun"]
 [ext_resource type="AudioStream" uid="uid://buy1rbo6lcc6t" path="res://assets/sounds/net.wav" id="11_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://caod244jyjkpt" path="res://scenes/uis/hud.tscn" id="12_eb6dy"]
+[ext_resource type="PackedScene" uid="uid://cbft8m4tjhore" path="res://scenes/uis/menu.tscn" id="13_trceg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jyhfs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -128,3 +129,5 @@ stream = ExtResource("10_choun")
 stream = ExtResource("11_ya4ey")
 
 [node name="Hud" parent="." unique_id=1993853115 instance=ExtResource("12_eb6dy")]
+
+[node name="Menu" parent="." unique_id=1704779872 instance=ExtResource("13_trceg")]

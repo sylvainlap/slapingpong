@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://cbft8m4tjhore"]
+
+[ext_resource type="Script" uid="uid://w167giwcv41q" path="res://scenes/uis/menu.gd" id="1_qwlva"]
+
+[node name="Menu" type="CanvasLayer" unique_id=1704779872]
+process_mode = 3
+script = ExtResource("1_qwlva")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=222181575]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.45490196)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=718571684]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1889474966]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1728280438]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="MainMenuContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=125541820]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer" unique_id=176081463]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8509804, 0.4509804, 1)
+theme_override_font_sizes/font_size = 32
+text = "slapingpong"
+horizontal_alignment = 1
+
+[node name="PlayLocalButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer" unique_id=1788862445]
+layout_mode = 2
+text = "Jouer en local"
+
+[node name="PlayNetworkButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer" unique_id=324722203]
+layout_mode = 2
+text = "Jouer en réseau"
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer" unique_id=2116295111]
+layout_mode = 2
+text = "Paramètres"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer" unique_id=1790212044]
+layout_mode = 2
+text = "Quitter"
+
+[node name="SettingsContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=879592152]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=918706752]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8509804, 0.4509804, 1)
+theme_override_font_sizes/font_size = 32
+text = "Paramètres"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=842841355]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer" unique_id=959553900]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "Sensibilité souris"
+
+[node name="MouseSensitivitySlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer" unique_id=1510045913]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.5
+max_value = 3.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=1796003429]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2" unique_id=1661565070]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "Difficulté de l'IA"
+
+[node name="DifficultyOptionButton" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2" unique_id=221014673]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 1
+item_count = 3
+popup/item_0/text = "Facile"
+popup/item_0/id = 0
+popup/item_1/text = "Normal"
+popup/item_1/id = 1
+popup/item_2/text = "Difficile"
+popup/item_2/id = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=300795320]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3" unique_id=808925557]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "Plein écran"
+
+[node name="FullscreenCheckBox" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3" unique_id=99879163]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/SettingsContainer" unique_id=350761305]
+layout_mode = 2
+text = "Retour"
+
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer/PlayLocalButton" to="." method="_on_play_local_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/MainMenuContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="value_changed" from="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer/MouseSensitivitySlider" to="." method="_on_mouse_sensitivity_slider_value_changed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/SettingsContainer/BackButton" to="." method="_on_back_button_pressed"]

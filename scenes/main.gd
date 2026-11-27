@@ -2,7 +2,7 @@
 # TODO: ce serait pas plus intelligible de mettre du code dans des scripts de scenes ?
 # TODO: la rotation de la raquette au shot n'est pas bonne
 # TODO: update Hud via signals ?
-
+class_name Main
 extends Node3D
 
 enum State { SERVE, PLAY, POINT, GAMEOVER }
@@ -97,8 +97,7 @@ var _mouse_motion: Vector2 = Vector2.ZERO
 var _flash_tween: Tween
 var _base_mouse_sensitivity: float = 0.002
 
-#@onready var game_menu: GameMenu = $GameMenu
-#@onready var hud_layer: CanvasLayer = $Hud
+
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var paddle_player: Node3D = $PaddlePlayer
 @onready var paddle_ai: Node3D = $PaddleAI
@@ -107,29 +106,21 @@ var _base_mouse_sensitivity: float = 0.002
 @onready var bounce_player: AudioStreamPlayer3D = $Sfx/BouncePlayer
 @onready var score_player: AudioStreamPlayer3D = $Sfx/ScorePlayer
 @onready var net_player: AudioStreamPlayer3D = $Sfx/NetPlayer
+@onready var menu: Menu = $Menu
 
 
 func _ready() -> void:
-	# TODO to remove, the mouse is not captured at game launch
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	#game_menu.menu_opened.connect(_on_menu_opened)
-	#game_menu.menu_closed.connect(_on_menu_closed)
-	#game_menu.new_game_requested.connect(start_new_game)
+	menu.play_local.connect(_on_play_local)
 	#game_menu.ai_difficulty_changed.connect(set_difficulty)
 	#game_menu.mouse_sensitivity_changed.connect(_on_mouse_sensitivity_multiplier_changed)
 	_base_mouse_sensitivity = mouse_sensitivity
 	_show_status("")
 	_show_flash("")
-	start_new_game()
 
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		_mouse_motion += event.screen_relative
-
-	# TODO to remove, open game_menu
-	if event.is_action_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func _physics_process(delta: float) -> void:
@@ -173,7 +164,7 @@ func set_difficulty(difficulty_in: int) -> void:
 			ai_miss_probability = 0.05
 
 
-func start_new_game() -> void:
+func _start_new_game() -> void:
 	_score = { PLAYER_SIDE: 0, AI_SIDE: 0 }
 	_server = PLAYER_SIDE
 	_player_paddle_x = 0.0
@@ -181,14 +172,7 @@ func start_new_game() -> void:
 	_ai_paddle_x = 0.0
 	_ai_paddle_z = -paddle_z_max
 	_camera_shake = 0.0
-	_reset_paddle_input()
 	_reset_serve()
-
-
-func _reset_paddle_input() -> void:
-	_mouse_motion = Vector2.ZERO
-	_player_paddle_target_x = _player_paddle_x
-	_player_paddle_target_z = _player_paddle_z
 
 
 func _reset_serve() -> void:
@@ -373,7 +357,7 @@ func _point_state(delta: float) -> void:
 func _game_over_state(delta: float) -> void:
 	_let_ball_fall(delta)
 	if _is_click_just_pressed():
-		start_new_game()
+		_start_new_game()
 
 
 func _update_server() -> void:
@@ -512,15 +496,8 @@ func _play_score_sound() -> void:
 	score_player.play()
 
 
-func _on_menu_opened(is_title_screen: bool) -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	#hud_layer.visible = not is_title_screen
-
-
-func _on_menu_closed() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	#hud_layer.visible = true
-	_reset_paddle_input()
+func _on_play_local() -> void:
+	_start_new_game()
 
 
 func _on_mouse_sensitivity_multiplier_changed(multiplier: float) -> void:

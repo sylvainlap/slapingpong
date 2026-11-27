@@ -107,7 +107,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 text = "Flash message"
 
 [node name="StatusLabel" type="Label" parent="MarginContainer" unique_id=1396064055]
@@ -115,6 +115,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 24
 text = "Status Message"
 horizontal_alignment = 1
